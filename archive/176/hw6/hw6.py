@@ -114,3 +114,4 @@ def avgCalories(filename):
 print(wordStatistics('hw06_p1_example.txt'))
 print(avgCalories(hw06_p3_example.txt))
     
+
