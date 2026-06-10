@@ -1,4 +1,6 @@
 import pandas as pd
+import numpy as np
+
 def mergeWithOption(df1, df2, option=None):
     if option == None:
         return pd.merge(df1, df2, on='Artist_Track', how='inner')
@@ -15,8 +17,19 @@ def mergeWithOption(df1, df2, option=None):
         merged_df = pd.merge(df1, df2, on = 'Artist_Track', how = 'right')
         return merged_df.fillna(-option)
     
-"""
 def replicateWithShifts(df): 
-    #concat
+    segments = []
 
-"""
+    for i in range(len(df.columns)):
+        segment = df.copy()
+
+        colstonan = df.columns[:i]
+        segment[colstonan] = np.nan
+        segments.append(segment)
+
+    result = pd.concat(segments, ignore_index=True)
+    return result 
+
+
+    
+

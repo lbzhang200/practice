@@ -23,6 +23,6 @@ def processArtists(df):
     new_df = new_df[new_df['Artist'.str.isalpha() == True]]
     new_df = new_df.drop_duplicates()
     new_df = new_df.set_index('Artist')
-    new_df['Stream'] = new_df['Stream']interpolate(method = 'linear')
+    new_df['Stream'] = new_df['Stream'].interpolate(method = 'linear')
 
     return new_df
