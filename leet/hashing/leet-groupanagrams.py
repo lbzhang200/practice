@@ -10,3 +10,12 @@ def groupAnagrams(self, strs):
         hashmap[key].append(st)
 
     return list(hashmap.values())
+
+def groupAnagrams(self, strs):
+    hashmap = defaultidct(list)
+
+    for st in strs:
+        key = "".join(sorted(st)) #group sorted into key 
+        hashmap[key].append(st) #sorted contains all with similar letters 
+
+    

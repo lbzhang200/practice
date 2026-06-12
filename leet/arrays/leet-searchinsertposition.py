@@ -9,3 +9,4 @@ def searchpos(self, nums, target):
 
     return count 
         
+

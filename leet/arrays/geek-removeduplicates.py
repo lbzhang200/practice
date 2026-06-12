@@ -17,3 +17,19 @@ newSize = removeduplicates(arr)
 
 for i in range(newSize):
     print(arr[i], end= " ")
+
+#another way
+
+def removeDuplicates(arr): #hashing
+    seen = set()
+    idx = 0
+    for i in range(len(arr)):
+        if arr[i] not in seen:
+            seen.add(arr[i])
+            arr[idx] = arr[i]
+            idx += 1
+    
+    return idx 
+
+for i in range(newSize):
+    print(arr[i], end= " ")

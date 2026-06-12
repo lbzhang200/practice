@@ -12,6 +12,15 @@ def twosumhash(nums, target):
     for i, n in enumerate(nums):
         comp = target - n 
         if comp in seen:
-            return [seen[comp], 1] #returns number if in array
+            return [seen[comp], i] #returns number if in array
         seen[n] = i
         
+
+def twosumhash(nums, target):
+    seen = {}
+    for i, n in enumerate(nums):
+        complement = target - n
+        if complement in seen:
+            return [seen[complement], i] #i represents the second number index
+        
+        seen[n] = i

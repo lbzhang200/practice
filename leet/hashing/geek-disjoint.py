@@ -21,4 +21,15 @@ def disjointhash(a, b): #hash method
             return False 
     return True 
 
+def disjointhash(a, b):
+    seen = set()
+
+    for lettersa in a:
+        seen.add(lettersa)
+
+    for lettersb in b:
+        if lettersb in seen:
+            return False 
+    return True 
+
 
