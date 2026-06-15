@@ -131,11 +131,11 @@ def reverse_words(s):
 
 from collections import defaultdict #dont use
 def group_anagrams(strs):
-    count = {}
+    groups = {}
     for st in strs:
         key = "".join(sorted(st))
-        count[key] += count.get(key, []) + [st] #checks if first time key is not there 
-    return list(count.values())
+        groups[key] += groups.get(key, []) + [st] #checks if first time key is not there 
+    return list(groups.values())
 
 
 #or 
@@ -179,12 +179,25 @@ def top_k_frequent(nums, k):
             if len(result) == k: #append until reaches k 
                 return result 
 
-
+def top_k_freqeunt2(nums, k):
+    count = {}
+    for num in nums:
+        count[num] = count.get(num, 0) + 1
     
+    for i in range(len(nums+1)):
+        buckets = []
 
-    
+    for num, freq in count.items(): #.keys() or .values() . items() (both)
+        buckets[freq].append(num) #append the number to index of frequency (higher frequency means higher index)
 
-    
+    result = []
+
+    for freq in range(len(buckets) - 1, 0, -1): #from right to left 
+        for num in buckets[freq]:
+            result.append(num)
+            if len(result) == k:
+                return result 
+
 
 
 # -----------------------------------------------------------------------------
@@ -201,7 +214,29 @@ def top_k_frequent(nums, k):
 # -----------------------------------------------------------------------------
 
 def product_except_self(nums):
-    pass
+    n = len(nums)
+    answer = [1] * n 
+
+    for i in range(1, n): #find to the left 
+        answer[i] = answer[i-1] * nums[i-1] 
+
+    suffix = 1
+    for i in range(n-1, -1, -1):
+        answer[i] = answer[i] * suffix
+        suffix = suffix * nums[i] #multiplies the index thats being used after its used 
+
+def product_except_self2(nums):
+    n = len(nums)
+    answer = [1] * n
+
+    for i in range(1, n):
+        answer[i] = answer[i-1] * nums[i-1] #multiplies everything to the left 
+
+    suffix = 1
+    for i in range(n-1, -1, -1):
+        answer[i] = answer[i] * suffix
+        suffix = suffix * nums[i]
+
 
 
 # -----------------------------------------------------------------------------
@@ -218,8 +253,31 @@ def product_except_self(nums):
 # Hint: a number is the START of a sequence if (num - 1) is NOT in the set.
 # -----------------------------------------------------------------------------
 
-def longest_consecutive(nums):
-    pass
+def longest_consecutive(nums): #could just sort it, but converting to set is faster 
+    num_set = set()
+    for n in nums:
+        num_set.add(n)
+
+    for n in nums:
+        if (n-1) not in num_set: #makes sure start is start (avoid duplicates)
+            length = 1 
+            while (n + length in num_set): #checks if consecutive (adds one)
+                length += 1
+            best = max(best, length)
+
+    return best
+def longest_conseuctive(nums):
+    num_set = set(nums)
+    best = 0
+
+    for n in nums:
+        if (n-1) not in num_set:
+            length = 1
+            while (length + n in num_set):
+                legnth+=1 
+            best = max(best, length)
+
+    return best 
 
 
 # -----------------------------------------------------------------------------
@@ -236,7 +294,19 @@ def longest_consecutive(nums):
 # -----------------------------------------------------------------------------
 
 def subarray_sum(nums, k):
-    pass
+    seen = {0: 1}
+    count = 0 
+    prefix = 0
+
+    for n in nums:
+        prefix = prefix + n
+
+        if (prefix - k) in seen:
+            count = count + seen[prefix - k]
+
+        seen[prefix] = seen.get(prefix, 0) + 1
+    return count 
+        
 
 
 # =============================================================================
