@@ -19,10 +19,10 @@ def handleMissing(df, n):
     return new_df 
 
 def processArtists(df):
-    new_df = df['Artist', 'Track', 'Key', 'Stream'].copy()
-    new_df = new_df[new_df['Artist'.str.isalpha() == True]]
+    new_df = df["Artist", "Track", "Key", "Stream"].copy()
+    new_df = new_df[new_df["Artist"].str.isalpha() == True]
     new_df = new_df.drop_duplicates()
-    new_df = new_df.set_index('Artist')
-    new_df['Stream'] = new_df['Stream'].interpolate(method = 'linear')
+    new_df = new_df.set_index("Artist")
+    new_df["Stream"] = new_df["Stream"].interpolate(method = 'linear')
 
-    return new_df
+    return new_df 

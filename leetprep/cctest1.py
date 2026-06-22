@@ -166,8 +166,17 @@ def q7(nums1, nums2):
 # -----------------------------------------------------------------------------
 
 def q8(nums):
-    pass
+    answer = [1] * len(nums)
 
+    for i in range(1, len(nums)):
+        answer[i] = answer[i-1] * nums[i-1] #multiplies by all elements to the left
+
+    suffix = 1
+    for i in range(len(nums) - 2, -1, -1): #all elements to the right 
+        answer[i] = answer[i] * suffix #because rightmost element multiplies by one
+        suffix = suffix * answer[i] #takes in right element 
+
+    return answer
 
 # -----------------------------------------------------------------------------
 # 9. Isomorphic Strings
@@ -180,7 +189,18 @@ def q8(nums):
 # -----------------------------------------------------------------------------
 
 def q9(s, t):
-    pass
+    
+    s_to_t = {}
+    t_to_s = {}
+
+    for schar, tchar in zip(s, t):
+        if schar in s_to_t and s_to_t[schar] != tchar:
+            return False 
+        elif tchar in t_to_s and t_to_s[tchar] != schar:
+            return False 
+        s_to_t[schar] = tchar
+        t_to_s[tchar] = schar         
+    return True 
 
 
 # -----------------------------------------------------------------------------
@@ -194,8 +214,12 @@ def q9(s, t):
 # -----------------------------------------------------------------------------
 
 def q10(arr):
-    pass
-
+    seen = set()
+    for num in arr:
+        if num * 2 in seen or (n % 2 == 0 and n // 2 in seen):
+            return True 
+        seen.add(num)
+    return False 
 
 # -----------------------------------------------------------------------------
 # 11. Subarray Sum Equals K
@@ -208,8 +232,15 @@ def q10(arr):
 # -----------------------------------------------------------------------------
 
 def q11(nums, k):
-    pass
+    count = 0
+    prefix = 0 
+    seen = {0 : 1}
 
+    for n in nums:
+        prefix += n 
+        count += count.get(prefix - k, 0) #either has it or doesnt 
+        seen[n] = count.get(prefix, 0) + 1 #adds current prefix for later 
+    return True 
 
 # -----------------------------------------------------------------------------
 # 12. Top K Frequent Elements
@@ -222,7 +253,23 @@ def q11(nums, k):
 # -----------------------------------------------------------------------------
 
 def q12(nums, k):
-    pass
+    count = {}
+    for n in nums:
+        count[n] = count.get(n, 0) + 1
+    for i in range(len(nums) + 1):
+        buckets = []
+    for num, freq in count.items():
+        buckets[freq] = num 
+    
+    result = []
+    for freq in range(len(nums)-1, 0, -1): #iterate from most frequency 
+        for num in buckets[freq]:
+            result.append(num)
+            if len(buckets) == k:
+                break
+    return result
+            
+        
 
 
 # -----------------------------------------------------------------------------
@@ -236,8 +283,13 @@ def q12(nums, k):
 # -----------------------------------------------------------------------------
 
 def q13(s):
-    pass
-
+    count = {}
+    for letter in s:
+        count = count.get(s, 0) + 1
+    for i, n in enumerate(s):
+        if count[n] == 1: 
+            return i 
+    return - 1
 
 # -----------------------------------------------------------------------------
 # 14. Majority Element
@@ -250,7 +302,10 @@ def q13(s):
 # -----------------------------------------------------------------------------
 
 def q14(nums):
-    pass
+    count = {}
+    for n in nums:
+        count[n] = count.get(n, 0) + 1
+    return max(count, key=count.get)
 
 
 # -----------------------------------------------------------------------------
@@ -265,8 +320,14 @@ def q14(nums):
 # -----------------------------------------------------------------------------
 
 def q15(nums):
-    pass
-
+    slow = 0
+    for fast in range(len(nums)):
+        if nums[fast] != 0:
+            nums[slow] = nums[fast]
+            slow += 1
+    while slow < fast:
+        nums[slow] = 0
+        slow += 1 
 
 # -----------------------------------------------------------------------------
 # 16. Two Sum II — Input Array Is Sorted
@@ -280,7 +341,16 @@ def q15(nums):
 # -----------------------------------------------------------------------------
 
 def q16(numbers, target):
-    pass
+    left, right = 0, len(numbers) - 1
+
+    while left < right:
+        total = numbers[left] + numbers[right]
+        if total == target:
+            return [left, right]
+        elif total < target:
+            left += 1
+        elif total > target:
+            right -= 1
 
 
 # -----------------------------------------------------------------------------
@@ -294,9 +364,19 @@ def q16(numbers, target):
 # -----------------------------------------------------------------------------
 
 def q17(nums):
-    pass
-
-
+    left, right = 0, len(nums) - 1 
+    result = []
+    top = len(nums) - 1
+    while left < right:
+        if nums[left] ** 2 > nums[right] ** 2:
+            result[top] = nums[left] ** 2
+            left += 1
+        if nums[left] ** 2 < nums[right] ** 2:
+            result[top] = nums[right] ** 2
+            right -= 1
+        else:
+            top -= 1            
+    return result 
 # -----------------------------------------------------------------------------
 # 18. Container With Most Water
 # -----------------------------------------------------------------------------
@@ -324,8 +404,24 @@ def q18(height):
 # -----------------------------------------------------------------------------
 
 def q19(nums1, m, nums2, n):
-    pass
+    p1 = m - 1
+    p2 = n - 1
+    p3 = m + n - 1
 
+    while p1 >= 0 or p2 >= 0:
+        if nums1[p1] > nums2[p2]:
+            nums1[p3] = nums1[p1]
+            p1 -= 1
+            p3 -= 1
+        elif nums1[p1] < nums2[p2]:
+            nums1[p3] = nums2[p2]
+            p2 -= 1
+            p3 -= 1
+        
+    while p2 >= 0:
+        nums1[p3] = nums2[p2] 
+        p2 -= 1
+        p3 -= 1
 
 # -----------------------------------------------------------------------------
 # 20. Longest Consecutive Sequence
@@ -339,7 +435,15 @@ def q19(nums1, m, nums2, n):
 # -----------------------------------------------------------------------------
 
 def q20(nums):
-    pass
+    seen = set(nums)
+    best = 0
+    for n in nums:
+        if n - 1 not in seen:
+            length = 1
+            while (length + n) in seen:
+                length += 1
+                best = max(best, length)
+    return best 
 
 
 # =============================================================================

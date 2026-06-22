@@ -32,4 +32,29 @@ def replicateWithShifts(df):
 
 
     
+def binByDigitLength(df):
+    df_binned = df.copy() #creates a new copy
+    
+    numeric_cols = df_binned.select_dtypes(include=[np.number]).columns #filters only the columns with numbers 
+    
+    for col in numeric_cols: #iterates through the numerical columns
+        def get_bin(val): #helper function to categorize an inidividual value
+            if pd.isna(val): #check if value is null
+                return "[0, 1)" # NaN treated as 0 digits
+            int_part = int(abs(val)) #takes in integer of abs value
+            
+            if int_part == 0:
+                return "[0, 1)"
+            
+            num_digits = len(str(int_part)) #takes in string part of int_part
+            lower = 10**(num_digits - 1) #lower bound 
+            upper = 10**num_digits #upper bound
+            
+            return f"[{lower}, {upper})" #returns lower and upper bound
+        
+        df_binned[col] = df_binned[col].apply(get_bin) #apply new transformation to column 
+        
+    return df_binned
+
+
 
