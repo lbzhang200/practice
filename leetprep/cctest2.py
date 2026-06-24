@@ -208,7 +208,19 @@ def q8(height):
 # -----------------------------------------------------------------------------
 
 def q9(nums, k):
-    
+    zerocount = 0 
+    left = 0 
+    maxlen = 0
+    for right in range(len(nums)):
+        if nums[right] == 0:
+            zerocount += 1
+        while zerocount > k: 
+            if nums[left] == 0:
+                zerocount -= 1
+            left += 1
+        maxlen = max(maxlen, right - left + 1)
+    return maxlen 
+
 
 
 # -----------------------------------------------------------------------------
