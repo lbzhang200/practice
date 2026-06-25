@@ -60,12 +60,12 @@ def max_average(nums, k):
 def max_average(nums, k):
     window_sum = sum(nums[:k])
     maxavg = window_sum / k
-
     for right in range(k, len(nums)):
-        window_sum += nums[right] 
+        window_sum += nums[right]
         window_sum -= nums[right - k]
         maxavg = max(maxavg, window_sum / k)
-    return maxavg
+
+    return maxavg 
 
 # -----------------------------------------------------------------------------
 # SW2. LC 3 — Longest Substring Without Repeating Characters (Medium) | VARIABLE
@@ -91,16 +91,15 @@ def longest_unique_substring(s):
 
 def longest_uniqe_substring2(s):
     seen = set()
-    left = 0
+    left = 0 
     maxlen = 0
     for right in range(len(s)):
         while s[right] in seen:
             seen.remove(s[left])
-            left += 1
+            left += 1 
         seen.add(s[right])
         maxlen = max(maxlen, right - left + 1)
     return maxlen 
-
 
 # -----------------------------------------------------------------------------
 # SW3. LC 1004 — Max Consecutive Ones III (Medium) | VARIABLE
@@ -127,6 +126,19 @@ def max_consecutive_ones(nums, k):
         maxlen = max(maxlen, right - left + 1)
     
     return maxlen 
+
+def max_consecutive_ones(nums, k):
+    left = 0 
+    zerocount = 0
+    maxlen = 0
+    for right in range(len(nums)):
+        if nums[right] == 0:
+            zerocount += 1
+        while zerocount > k:
+            if nums[left] == 0:
+                zerocount -= 1
+            left += 1
+    maxlen = max(maxlen, right - left + 1)
     
 # -----------------------------------------------------------------------------
 # SW4. LC 438 — Find All Anagrams in a String (Medium) | FIXED WINDOW
@@ -143,7 +155,15 @@ def max_consecutive_ones(nums, k):
 # -----------------------------------------------------------------------------
 
 def find_anagrams(s, p):
-    pass
+    pcount = {}
+    for letter in p:
+        pcount = pcount.get(letter, 0) + 1
+    startindex = 0 
+    for right in range(len(s)):
+        while s[right] in pcount:
+            pcount.remove(s[left])
+            left += 1 
+        #ts too hard
 
 
 # -----------------------------------------------------------------------------
@@ -162,8 +182,17 @@ def find_anagrams(s, p):
 # -----------------------------------------------------------------------------
 
 def min_subarray_len(target, nums):
-    pass
-
+    window_sum = 0 
+    length = 0 
+    left = 0
+    minlen = float('inf')
+    for right in range(len(nums)):
+        windowsum += nums[right]
+        while windowsum >= target:
+            minlen = min(minlen, right - left + 1)
+            windowsum -= nums[left]
+            left += 1
+    return 0 if minlen == float('inf') else minlen
 
 # =============================================================================
 # PART 2 — STACKS
@@ -272,6 +301,19 @@ def is_valid(s):
             stack.pop()
     return len(stack) ==0 
 
+def is_valid(s):
+    stack = []
+    pairs = {')': '(', '}': '{', ']': '['}
+
+    for c in s:
+        if c in '({[':
+            stack.append(c)
+        else:
+            if not stack or stack[-1] != pairs[c]:
+                return False 
+            stack.pop()
+    return len(stack) == 0 
+
 
 # -----------------------------------------------------------------------------
 # S2. LC 844 — Backspace String Compare (Easy) | STACK — simulate
@@ -291,7 +333,16 @@ def is_valid(s):
 # -----------------------------------------------------------------------------
 
 def backspace_compare(s, t):
-    pass
+    string1 = ""
+    string2 = ""
+
+    stack = []
+    for letter in s:
+        if letter != '#':
+            stack.append(letter)
+        else:
+            stack.pop()
+    
 
 
 # -----------------------------------------------------------------------------
