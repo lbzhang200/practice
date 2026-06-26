@@ -335,14 +335,15 @@ def is_valid(s):
 def backspace_compare(s, t):
     string1 = ""
     string2 = ""
-
-    stack = []
-    for letter in s:
-        if letter != '#':
-            stack.append(letter)
-        else:
-            stack.pop()
-    
+    def build (string):
+        stack = []
+        for letter in s:
+            if letter != '#':
+                stack.append(letter)
+            else:
+                stack.pop()
+        return stack 
+    return build(s) == build(t)
 
 
 # -----------------------------------------------------------------------------
@@ -362,7 +363,13 @@ def backspace_compare(s, t):
 # -----------------------------------------------------------------------------
 
 def daily_temperatures(temps):
-    pass
+    stack = []
+    popped_index = 0 
+    for i in range(len(temps)):
+        while temps[i] < temps[-1]:
+            stack.append()
+
+
 
 
 # -----------------------------------------------------------------------------

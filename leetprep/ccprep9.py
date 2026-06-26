@@ -21,17 +21,15 @@
 def q1(nums):
     result = [1] * len(nums)
     n = len(nums)
-    subfix = 1 
+    suffix = 1 
 
     for i in range(1, n):
         result[i] = result[i-1] * nums[i-1]
 
     for i in range(len(nums) - 2, -1, -1):
-        result[i] = result[i+1] * subfix 
-        subfix *= nums[i]
+        result[i] = result[i] * suffix 
+        suffix *= nums[i]
     return result 
-
-
 
 # -----------------------------------------------------------------------------
 # 2.
@@ -47,9 +45,17 @@ def q1(nums):
 # -----------------------------------------------------------------------------
 
 def q2(s):
-    pass
-
-
+    stack = []
+    key = {')': '(', ']': '[', '}': '{'}
+    for letter in s:
+        if letter in '([{':
+            stack.append(letter) #append if its a starting one
+        else:
+            if not stack or stack[-1] != key[letter]: #check if end if an opening bracket
+                return False 
+            stack.pop(letter) 
+    return len(stack) ==0 
+         
 # -----------------------------------------------------------------------------
 # 3.
 # -----------------------------------------------------------------------------
@@ -62,8 +68,31 @@ def q2(s):
 #   Output: [1,1,4,2,1,1,0,0]
 # -----------------------------------------------------------------------------
 
+#solution is basically this. 
+#stack holds the index of the havent been warmer temperatures 
+#compare current weather to appended warmer temperatures
+#if current weather is greater - found a greater weather 
+#pop gives index of the weather at top of the stack
+# i is current day, so i - idx is current day - weather day = total days 
 def q3(temps):
-    pass
+    stack = []
+    result = [0] * len(temps)
+    for i in range(len(temps)):
+        while stack and temps[i] > temps[stack[-1]]:
+            idx = stack.pop()
+            result[idx] = i - idx 
+        stack.append(i)
+    return result 
+
+def q32(temps):
+    stack = []
+    result = [0] * len(temps)
+    for i in range(len(temps)):
+        while stack and temps[i] > temps(stack[-1]):
+            idx = stack.pop() #weather day
+            result[idx] = i - idx 
+        stack.append(i) # stack takes in index 
+    return result 
 
 
 # -----------------------------------------------------------------------------
@@ -96,7 +125,15 @@ def q4(s):
 # -----------------------------------------------------------------------------
 
 def q5(s, t):
-    pass
+    def build(word):
+        stack = []
+        for letter in word:
+            if letter != '#':
+                stack.append(letter)
+            else:
+                stack.pop()
+        return stack 
+    return build(s) == build(t)
 
 
 # -----------------------------------------------------------------------------
@@ -111,9 +148,16 @@ def q5(s, t):
 # -----------------------------------------------------------------------------
 
 def q6(nums):
-    pass
-
-
+    seen = set(nums)
+    maxlength = 0 
+    for n in nums:
+        if (n - 1) not in seen:
+            length = 1
+            while length + n in seen:
+                length += 1
+            maxlength = max(maxlength, length)
+    return maxlength 
+    
 # -----------------------------------------------------------------------------
 # 7.
 # -----------------------------------------------------------------------------
@@ -126,7 +170,18 @@ def q6(nums):
 # -----------------------------------------------------------------------------
 
 def q7(nums):
-    pass
+    left, right = 0, len(nums) - 1
+    top = len(nums) - 1
+    result = []
+    while left < right:
+        if nums[left] ** 2 > nums[right] ** 2:
+            result[top] = nums[left] ** 2 
+            left += 1
+        elif nums[left] ** 2 > nums[right] ** 2:
+            nums[top] = nums[right] ** 2
+            right -= 1
+        top -= 1 
+    return result 
 
 
 # -----------------------------------------------------------------------------
@@ -144,7 +199,16 @@ def q7(nums):
 # -----------------------------------------------------------------------------
 
 def q8(target, nums):
-    pass
+    window_sum = 0
+    left = 0
+    minlen = float('inf')
+    for right in range(len(nums)):
+        window_sum += nums[right]
+        while window_sum >= target:
+            minlen = min(minlen, right - left + 1)
+            window_sum -= nums[left] 
+            left += 1 #shrink left to reduce windowsum
+    return minlen
 
 
 # -----------------------------------------------------------------------------
@@ -158,7 +222,18 @@ def q8(target, nums):
 # -----------------------------------------------------------------------------
 
 def q9(nums, k):
-    pass
+    count = {}
+    for n in nums:
+        count[n] = count.get(n, 0) + 1
+    buckets = [[]for _ in range len(nums) + 1]
+    for n, freq in count.items():
+        buckets[freq] = n
+    result = []
+    for freq in range(len(nums) - 1, -1, - 1):
+        for n in buckets[freq]:
+            result.append(n)
+            if len(result) >= k:
+                return result 
 
 
 # -----------------------------------------------------------------------------
@@ -173,7 +248,18 @@ def q9(nums, k):
 # -----------------------------------------------------------------------------
 
 def q10(nums, k):
-    pass
+    zerocount = 0 
+    maxlen = 0
+    left = 0 
+    for right in range(len(nums)):
+        if nums[right] == 0:
+            zerocount += 1
+        while zerocount > k:
+            if nums[left] == 0:
+                zerocount -= 1
+            left += 1  
+        maxlen = max(maxlen, right - left + 1)
+    return maxlen  
 
 
 # -----------------------------------------------------------------------------
@@ -188,8 +274,14 @@ def q10(nums, k):
 # -----------------------------------------------------------------------------
 
 def q11(nums):
-    pass
-
+    slow = 0
+    for fast in range(len(nums)):
+        if nums[fast] == 0:
+            nums[slow] = nums[fast]
+            slow += 1
+    while slow < len(nums):
+        nums[slow] = 0 
+        slow += 1  
 
 # -----------------------------------------------------------------------------
 # 12.
@@ -203,7 +295,19 @@ def q11(nums):
 # -----------------------------------------------------------------------------
 
 def q12(s, t):
-    pass
+
+    if len(s) != len(t):
+        return False 
+    
+    count = {}
+    for letter in s:
+        count[letter] = count.get(letter, 0) + 1
+    
+    for letter in t:
+        count[letter] = count.get(letter, 0) - 1
+        if count[letter] < 0:
+            return False 
+    return True  
 
 
 # -----------------------------------------------------------------------------
@@ -218,8 +322,12 @@ def q12(s, t):
 # -----------------------------------------------------------------------------
 
 def q13(nums, target):
-    pass
-
+    seen = {}
+    for i, n in enumerate(nums):
+        comp = target - n
+        if comp in seen:
+            return [seen[n], i]
+        seen[n] = i 
 
 # -----------------------------------------------------------------------------
 # 14.
@@ -241,7 +349,12 @@ def q13(nums, target):
 # -----------------------------------------------------------------------------
 
 def q14(s, t):
-    pass
+    a, b = 0
+    while a < len(s) and b < len(t):
+        if s[a] == s[b]:
+            a += 1
+        b +=1 
+    return a == len(s)
 
 
 # -----------------------------------------------------------------------------
@@ -256,8 +369,14 @@ def q14(s, t):
 # -----------------------------------------------------------------------------
 
 def q15(nums, k):
-    pass
+    sum_window = sum(nums[:4])
+    maxavg = sum_window / k
 
+    for right in range(k, len(nums)):
+        sum_window += nums[right]
+        sum_window -= nums[right - k]
+        maxavg = max(maxavg, sum_window / k)
+    return maxavg 
 
 # =============================================================================
 #
