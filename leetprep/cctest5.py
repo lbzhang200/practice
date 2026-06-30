@@ -24,10 +24,10 @@
 def q1(nums, k):
     seen = {}
     for i, n in enumerate(nums):
-        if n in seen and abs(i - seen[n]) <= k:
+        if n in seen and abs(seen[n] - i):
             return True 
         seen[n] = i 
-    return False    
+    return False 
 
 # -----------------------------------------------------------------------------
 # 2.
@@ -46,16 +46,16 @@ def q1(nums, k):
 def q2(s):
     left, right = 0, len(s) - 1
     while left < right:
-        while s[left] != s[right] and not s[left].alpha():
+        while s[left] != s[right] and not s[left].isalpha(): 
             left += 1
-        while s[left] != s[right] and not s[right].islpha():
+        while s[left] != s[right] and not s[right].isalpha(): 
             right -= 1
         if s[left].lower() != s[right].lower():
             return False 
-        left += 1 
-        right -= 1 
-    return True  
-
+        else:
+            left +=1 
+            right -= 1
+    return  True 
 # -----------------------------------------------------------------------------
 # 3.
 # -----------------------------------------------------------------------------
@@ -68,30 +68,27 @@ def q2(s):
 
 def q3(nums):
     nums.sort()
-    result = []
-    for i in range(len(nums)):
-        if i > 0 and nums[i] == nums[i-1]:
-            continue 
+    result = [] 
+    for i in range (len(nums)):
+        if i > 0 and nums[i] == nums[i-1]: #checking for duplicates
+            continue
         if nums[i] > 0:
             break
-        left, right = i+1, len(nums) - 1
+        left, right = i + 1, len(nums) - 1
         while left < right:
-            total = nums[i] + nums[left] + nums[right]
-            if total == 0:
+            total = nums[left] + nums[i] + nums[right]
+            if total == 0: 
                 result.append(nums[i], nums[left], nums[right])
-                left += 1
-                right -= 1
                 while left < right and nums[left] == nums[left - 1]:
                     left += 1
                 while left < right and nums[right] == nums[right + 1]:
                     right -= 1
-            else: 
-                if total < 0: #if too small, make smaller number bigger  
+            else:
+                if total < 0:
                     left += 1
-                else:
-                    right -= 1 # if too big, make bigger number smaller 
+                else: 
+                    right -= 1
     return result 
-
 # -----------------------------------------------------------------------------
 # 4.
 # -----------------------------------------------------------------------------
@@ -109,15 +106,14 @@ def q3(nums):
 
 def q4(prices):
      #dont have to use two pointers 
-
-    maxprofit = 0 
-    minprice = float('inf')
-
-    for price in prices:
-        minprice = min(minprice, price)
-        maxprice = max(maxprice, price - minprice)
-
-    return maxprofit 
+     maxprofit = 0
+     minprice = float('inf')
+     
+     for price in prices:
+         minprice = min(minprice, price)
+         maxprofit = max(maxprofit, price - minprice) 
+     return maxprofit 
+    
 # -----------------------------------------------------------------------------
 # 5.
 # -----------------------------------------------------------------------------
@@ -129,8 +125,25 @@ def q4(prices):
 # -----------------------------------------------------------------------------
 
 def q5(s, p):
-    pass
+    if len(p) > len(s):
+        return []
+    pcount = {} #count for p
+    window = {}
+    for letter in p:
+        pcount[letter] = pcount.get(letter, 0) + 1
+    result = []
+    for i in range(len(s)): 
+        window[s[i]] = window.get(s[i], 0) + 1
+        if i >= len(p):
+            leftchar = s[i - len(s)]
+            window[leftchar] -= 1 
+            if window[leftchar] == 0:
+                del window[leftchar]
+        if window == pcount:
+            result.append(i - len(p) + 1)
+    return result  
 
+#this is tough 
 
 # -----------------------------------------------------------------------------
 # 6.
@@ -144,8 +157,12 @@ def q5(s, p):
 # -----------------------------------------------------------------------------
 
 def q6(nums):
-    pass
-
+    slow = 0
+    for fast in range(len(nums)):
+        if nums[fast] != nums[slow]:
+            nums[slow] = nums[fast]
+            slow += 1 
+    return slow + 1
 
 # -----------------------------------------------------------------------------
 # 7.
@@ -158,8 +175,14 @@ def q6(nums):
 # -----------------------------------------------------------------------------
 
 def q7(nums, k):
-    pass
-
+    count = 0
+    prefix = 0
+    seen = {0: 1} 
+    for n in nums:
+        prefix += n
+        count = seen.get(k - prefix, 0) + 1
+        seen[prefix] = seen.get(prefix, 0) + 1
+    return count 
 
 # -----------------------------------------------------------------------------
 # 8.
@@ -173,7 +196,15 @@ def q7(nums, k):
 # -----------------------------------------------------------------------------
 
 def q8(s, t):
-    pass
+    def build(word):
+        stack = []
+        for letter in word:
+            if letter != '#':
+                stack.append(letter)
+            else:
+                stack.pop()
+        return stack 
+    return build(s) == build(t) 
 
 
 # -----------------------------------------------------------------------------
@@ -188,8 +219,16 @@ def q8(s, t):
 # -----------------------------------------------------------------------------
 
 def q9(height):
-    pass
-
+    maxarea = 0
+    left, right = 0, len(height) - 1
+    while left < right: 
+        area = min(height[left], height[right]) * (right - left)
+        maxarea = max(maxarea, area)
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+    return maxarea  
 
 # -----------------------------------------------------------------------------
 # 10.
@@ -206,8 +245,13 @@ def q9(height):
 # -----------------------------------------------------------------------------
 
 def q10(s):
-    pass
-
+    count = {}
+    for letter in s:
+        count[letter] = count.get(letter, 0) + 1
+    for i, c in enumerate(s):
+        if count[c] == 1:
+            return i
+    return - 1
 
 # -----------------------------------------------------------------------------
 # 11.
@@ -224,8 +268,18 @@ def q10(s):
 # -----------------------------------------------------------------------------
 
 def q11(nums, k):
-    pass
-
+    zerocount = 0
+    left = 0
+    maxnumber = 0
+    for right in range(len(nums)):
+        if nums[right] == 0:
+            zerocount += 1
+        while zerocount > k:
+            if nums[left] == 0:
+                zerocount -= 1
+            left += 1
+        maxnumber = max(maxnumber, right - left + 1)
+    return maxnumber  
 
 # -----------------------------------------------------------------------------
 # 12.
@@ -242,8 +296,14 @@ def q11(nums, k):
 # -----------------------------------------------------------------------------
 
 def q12(temps):
-    pass
-
+    result = []
+    stack = []
+    for right in range(len(temps)):
+        while temps[right] > stack[-1]: #while we get a warmer day
+            idx = stack.pop() #gets index of day that needs warmer day 
+            result[idx] = right - idx #today minus warmer day 
+        stack.append(right) #append the index 
+    return result  
 
 # -----------------------------------------------------------------------------
 # 13.
@@ -260,8 +320,7 @@ def q12(temps):
 # -----------------------------------------------------------------------------
 
 def q13(nums1, nums2):
-    pass
-
+    return list(set(nums1) & set(nums2)) #and means union 
 
 # -----------------------------------------------------------------------------
 # 14.
@@ -275,8 +334,13 @@ def q13(nums1, nums2):
 # -----------------------------------------------------------------------------
 
 def q14(numbers, target):
-    pass
-
+    seen = {}
+    for i, n in enumerate(numbers):
+        comp = target - n 
+        if comp in seen:
+            return [seen[comp] + 1, i + 1]
+        seen[n] = i 
+    
 
 # -----------------------------------------------------------------------------
 # 15.
@@ -289,8 +353,11 @@ def q14(numbers, target):
 # -----------------------------------------------------------------------------
 
 def q15(strs):
-    pass
-
+    count = {}
+    for letter in strs:
+        key = "".join(sorted(letter))
+        count[key] = count.get(key, []) + letter 
+    return list(count.values)  
 
 # =============================================================================
 #
