@@ -18,7 +18,7 @@ categorical_columns_selector = selector(dtype_include=object)
 categorical_columns = categorical_columns_selector(data)
 print(categorical_columns)
 
-data_categorical = data[categorical_columns]
+data_categorical = data[categorical_columns] #this time categorical columns instead 
 print(data_categorical)
 
 #prints out all the categorical columns 

@@ -27,6 +27,13 @@ model = make_pipeline(
     LogisticRegression(max_iter=500)
 )
 
+model = make_pipeline(
+    OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=1),
+    LogisticRegression(max_iter = 500)
+)
+
+#making the pipeline (both oridnal encoder and logistic regression)
+
 #now evaluate 
 
 from sklearn.model_selection import cross_validate

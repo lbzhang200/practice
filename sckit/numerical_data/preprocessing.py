@@ -55,3 +55,21 @@ model.predict(data_test)
 #transformer 
 #basically takes in the mean and std of each column and produces a new value thats fair for all columns 
 
+#new practice 
+
+target_name = "class"
+target = adult_census(target_name)#what were trying to predict
+data = adult_census.drop(column=target_name)
+
+numerical_columns = ["age", "capital-gain", "capital-loss", "hours-per-week"]
+data_numeric = data[numerical_columns]
+
+data_train, target_train, data_test, target_test = train_test_split(
+    data, target, random_state=42
+)
+
+model = make_pipeline(StandardScaler(), LogisticRegression())
+model.fit(data_train, target_train)
+model.predict(data_test)
+
+#automatically scales the data through logistic regression 
